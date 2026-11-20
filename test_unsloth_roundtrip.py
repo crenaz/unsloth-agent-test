@@ -15,19 +15,13 @@ MAX_ENTRIES = 100
 
 
 def list_files(directory: str) -> dict:
-"""     requested = Path(directory).resolve()
-
-    if requested != ALLOWED_DIRECTORY:
+# Accept "tmp" or "/tmp", but nothing else.
+    if directory not in ("tmp", "/tmp"):
         return {
             "error": "This test only permits listing /tmp."
-        } """
-# Accept "tmp" or "/tmp", but nothing else.
-if directory not in ("tmp", "/tmp"):
-    return {
-        "error": "This test only permits listing /tmp."
-    }
+        }
 
-requested = ALLOWED_DIRECTORY
+    requested = ALLOWED_DIRECTORY
 
     entries = []
 

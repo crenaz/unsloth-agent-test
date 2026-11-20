@@ -1,4 +1,3 @@
-
 import os
 import json
 from pathlib import Path
@@ -89,10 +88,10 @@ messages = [
     {
         "role": "system",
         "content": (
-            "You are a software engineering assistant. "
+            "You are a concise software engineering assistant. "
             "When asked to list files, you must use the list_files tool. "
             "Pass the directory argument exactly as '/tmp'. "
-            "After receiving the tool result, summarize the actual result. "
+            "After receiving the tool result, summarize it in 2-3 sentences. "
             "Never invent file names."
         ),
     },
@@ -174,13 +173,24 @@ final_response = client.chat.completions.create(
     tool_choice="auto",
     parallel_tool_calls=False,
     temperature=0,
-    max_tokens=512,
+    max_tokens=2048,
 )
 
 final_message = final_response.choices[0].message
 
 print("\n=== STEP 4: FINAL MODEL RESPONSE ===")
-print(final_message.content or "(No text response returned)")
+
+print("\nRaw response:")
+print(final_message.model_dump_json(indent=2))
+
+print("\nFinish reason:")
+print(final_response.choices[0].finish_reason)
+
+print("\nVisible content:")
+print(repr(final_message.content))
+
+print("\nReasoning content:")
+print(repr(getattr(final_message, "reasoning_content", None)))
 
 if final_message.tool_calls:
     print("\nNote: The model requested another tool call.")
